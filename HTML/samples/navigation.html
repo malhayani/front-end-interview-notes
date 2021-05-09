@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head></head>
+
+<body>
+
+</body>
+
+</html>
+
+<style>
+
+</style>
+
+<script>
+    // build a navigation function that will return a navigation component that can be added to the dom
+    const items = [
+        {
+            label: 'Google',
+            href: 'https://google.com'
+        },
+        {
+            label: 'facebook',
+            href: 'https://facebook.com'
+        }
+    ];
+
+    const buildNavigation = (items) => {
+        const container = document.createElement('div');
+
+        items.forEach(item => {
+            const linkContainer = document.createElement('div');
+            const link = document.createElement('a');
+            link.setAttribute('href', item.href);
+            link.setAttribute('rel', 'noopener noreferrer');
+            link.setAttribute('target', '_blank');
+            link.textContent = item.label;
+            linkContainer.appendChild(link);
+            container.appendChild(linkContainer);
+        });
+
+        return container;
+    }
+
+    const navigation = buildNavigation(items);
+    console.log(navigation)
+    document.body.appendChild(navigation);
+</script>

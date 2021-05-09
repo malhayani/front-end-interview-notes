@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+
+<head></head>
+
+<body>
+    <ul id="todoList"></ul>
+</body>
+
+</html>
+
+<style>
+    .hidden {
+        display: none;
+    }
+
+    .pointer {
+        cursor: pointer;
+    }
+</style>
+
+<script>
+    const data = [
+        {
+            title: 'Food',
+            type: 'folder',
+            children: [
+                {
+                    title: 'Fruit',
+                    type: 'folder',
+                    children: [
+                        {
+                            title: 'Strawberries',
+                            type: 'file',
+                            children: []
+                        },
+                        {
+                            title: 'Raspberries',
+                            type: 'file',
+                            children: []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            title: 'Snacks',
+            type: 'file',
+            children: []
+        },
+        {
+            title: 'Vegetables',
+            type: 'file',
+            children: [
+                {
+                    title: 'Broccoli',
+                    type: 'file',
+                    children: []
+                },
+            ]
+        },
+    ]
+
+    const generateTodoList = (list, container) => {
+        list.forEach(item => {
+            const listItem = document.createElement('li');
+            const title = document.createElement('span');
+            title.textContent = item.title;
+            listItem.appendChild(title);
+            if (item.children.length > 0) {
+                const listContainer = document.createElement('ul');
+                listItem.appendChild(listContainer);
+                listItem.classList.add('pointer');
+                title.addEventListener('click', () => {
+                    if (listContainer.className.split(' ').includes('hidden')) listContainer.classList.remove('hidden');
+                    else listContainer.classList.add('hidden');
+                });
+                generateTodoList(item.children, listContainer);
+            }
+            container.appendChild(listItem);
+        });
+    }
+
+    (() => {
+        generateTodoList(data, document.getElementById('todoList'));
+    })();
+
+</script>

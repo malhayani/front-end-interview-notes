@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head></head>
+
+<body>
+    <div id="todoContainer">
+        <div id="addTodoContainer">
+            <input id="addTodoInput" type="text" />
+            <button id="addTodoButton">Add</button>
+        </div>
+        <div id="todoListContainer">
+
+        </div>
+    </div>
+</body>
+
+</html>
+
+<style>
+    .todo_container {
+        display: flex;
+    }
+</style>
+
+<script>
+    let todos = [];
+
+    const mockFetch = (url) => {
+        return Promise.resolve([
+            {
+                id: 0,
+                description: 'Go shopping',
+                complete: false
+            },
+            {
+                id: 1,
+                description: 'Walk the dog',
+                complete: false
+            }
+        ]);
+    }
+
+    const fetchTodos = async () => {
+        try {
+            return await mockFetch('todoUrl');
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const generateList = (todo) => {
+        let container = document.getElementById('todoListContainer');
+        container.innerHTML = '';
+        todos.forEach(todo => {
+            let div = document.createElement('div');
+            div.setAttribute('id', todo.id);
+            div.classList.add('todo_container')
+            let paragraph = document.createElement('p');
+            let text = document.createTextNode(todo.description);
+            paragraph.appendChild(text);
+            let button = document.createElement('button');
+            button.textContent = todo.complete ? 'Undo' : 'Complete'
+            button.addEventListener('click', () => {
+                completeTodo(todo.id);
+            });
+            div.appendChild(paragraph);
+            div.appendChild(button);
+            container.appendChild(div);
+        });
+    }
+
+    const addTodo = async (text) => {
+        try {
+            let todo = await Promise.resolve({
+                id: todos.length,
+                description: text,
+                complete: false
+            });
+            todos.push(todo);
+            generateList(todos);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const completeTodo = async (id) => {
+        todos.forEach(todo => {
+            if (todo.id === id) todo.complete = !todo.complete;
+        });
+
+        generateList(todos);
+    }
+
+    // IIFE
+    (async () => {
+        todos = await fetchTodos();
+        generateList(todos);
+
+        document.getElementById('addTodoButton').addEventListener('click', () => {
+            let input = document.getElementById('addTodoInput');
+            if (input.value) {
+                addTodo(input.value);
+                input.value = '';
+            }
+        });
+    })();
+
+
+</script>

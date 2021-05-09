@@ -1,0 +1,62 @@
+<!doctype html>
+
+<head></head>
+
+<body class="test">
+    <div class="purple">
+        <h1 class="red">Hello, this is the header</h1>
+        <p class="blue">This is the littler header</p>
+        <div class="black">
+            <div class="gray">
+                <p class="green">This is a paragraph</p>
+            </div>
+        </div>
+    </div>
+    <div class="pink">
+        <div class="orange">
+            <div class="brown">
+                <p class="green">hello</p>
+            </div>
+        </div>
+        <div class="indigo">
+            <p class="green">good bye</p>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<script>
+    // Find the first element that has the class 'green'
+    const bfs_traverse = (root) => {
+        let queue = [root];
+        while (queue.length > 0) {
+            let node = queue.shift();
+            if (node.className.includes('green')) {
+                return node;
+            } else if (node.children) {
+                queue.push(...node.children);
+            }
+        }
+        return null;
+    }
+
+    const dfs_traverse = (root) => {
+        let stack = [root];
+        while (stack.length > 0) {
+            let node = stack.pop();
+            if (node.className.includes('green')) {
+                return node;
+            } else if (node.children) {
+                for (let i = node.children.length - 1; i >= 0; i--) {
+                    stack.push(node.children[i]);
+                }
+            }
+        }
+        return null;
+    }
+
+
+    console.log(bfs_traverse(document.body));
+    console.log(dfs_traverse(document.body));
+</script>

@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+    integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+</head>
+
+<body>
+  <div id="directoryContainer"></div>
+</body>
+
+</html>
+
+<style>
+  .block-container {
+    display: block;
+  }
+
+  .details-container {
+    display: flex;
+    line-height: 1rem;
+    margin: 1rem;
+  }
+
+  .icon-container {
+    vertical-align: middle;
+  }
+
+  .file-name-container {
+    margin: 0px;
+    padding-left: 0.5rem;
+  }
+
+  .details-closed {
+    display: none;
+  }
+
+  .folder {
+    cursor: pointer;
+  }
+</style>
+
+<script>
+  const render = (data, container, depth) => {
+    data.forEach(file => {
+      const blockContainer = document.createElement('div');
+      blockContainer.setAttribute('id', `${file.name}_${depth}`);
+      blockContainer.classList.add('block-container');
+
+      const detailsContainer = document.createElement('div');
+      detailsContainer.classList.add('details-container');
+
+      if (depth !== 0) detailsContainer.classList.add('details-closed');
+      detailsContainer.style.marginLeft = (depth * 1) + 'rem';
+      detailsContainer.classList.add(`${container.id}_${depth}`);
+
+      if (file.type === 'folder') {
+        detailsContainer.classList.add('folder');
+        detailsContainer.addEventListener('click', () => {
+          let children = document.querySelectorAll(`div.${file.name}_${depth}_${depth + 1}`);
+          let arr = Array.from(children)
+          arr.forEach(a => {
+            a.classList.remove('details-closed');
+          });
+        });
+      }
+
+      const icon = document.createElement('span');
+      icon.classList.add('icon-container');
+      icon.classList.add('fa');
+      icon.classList.add(file.type === 'folder' ? 'fa-folder' : 'fa-file');
+
+      const fileNameContainer = document.createElement('p');
+      fileNameContainer.classList.add('file-name-container');
+      fileNameContainer.textContent = file.name;
+
+      detailsContainer.appendChild(icon);
+      detailsContainer.appendChild(fileNameContainer);
+      blockContainer.appendChild(detailsContainer);
+      container.appendChild(blockContainer);
+
+      if (file.children.length > 0) {
+        render(file.children, blockContainer, depth + 1);
+      }
+    });
+  }
+
+  const mockFetch = () => {
+    const mockData = [
+      {
+        name: 'src',
+        type: 'folder',
+        children: [
+          {
+            name: 'public',
+            type: 'folder',
+            children: [
+              {
+                name: 'index.html',
+                type: 'file',
+                children: []
+              },
+              {
+                name: 'index.css',
+                type: 'file',
+                children: []
+              }
+            ]
+          },
+          {
+            name: 'index.js',
+            type: 'file',
+            children: []
+          }
+        ]
+      },
+      {
+        name: 'test',
+        type: 'folder',
+        children: [
+          {
+            name: 'test1.js',
+            type: 'file',
+            children: []
+          },
+          {
+            name: 'test2.js',
+            type: 'file',
+            children: []
+          }
+        ]
+      },
+      {
+        name: 'README.md',
+        type: 'file',
+        children: []
+      },
+      {
+        name: '.gitignore',
+        type: 'file',
+        children: []
+      }
+    ];
+    return Promise.resolve(mockData);
+  }
+
+  (async () => {
+    let response = await mockFetch();
+    render(response, document.getElementById('directoryContainer'), 0);
+    console.log(response);
+  })();
+
+</script>

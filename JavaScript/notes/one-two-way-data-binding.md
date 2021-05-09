@@ -1,0 +1,3 @@
+### What is the difference between one way data binding and two way data binding? 
+- Two way data binding means that the UI component are bound to the data model dynamically. This means the update can occur in the data model or in the UI. Can cause side effects. Angular
+- One way data binding means that the model owns the data. Only the model can change it. Changes from the UI trigger messages to update the model. React.

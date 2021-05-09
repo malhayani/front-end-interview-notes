@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+
+<head></head>
+
+<body>
+    <input id="searchInput" type='text' placeholder="search..." />
+    <div id="autoCompleteResultsContainer" class="hidden">
+
+    </div>
+</body>
+
+</html>
+
+<style>
+    #autoCompleteResultsContainer {
+        width: 10rem;
+        border: 1px solid black;
+        min-height: 1rem;
+    }
+
+    .auto-complete-container {
+        cursor: pointer;
+    }
+
+    .hidden {
+        display: none;
+    }
+</style>
+
+<script>
+    // const debounce = (func, wait) => {
+    //     let timeout;
+    //     return function(...args) {
+    //         const context = this;
+    //         if (timeout) clearTimeout(timeout);
+    //         timeout = setTimeout(() => {
+    //             timeout = null;
+    //             func.apply(context, args);
+    //         }, wait);
+    //     }
+    // }
+
+    let currentTimeout = null;
+
+    const mockFetch = () => {
+        return new Promise(resolve => {
+            if (currentTimeout) clearTimeout(currentTimeout);
+            currentTimeout = setTimeout(() => {
+                currentTimeout = null;
+                resolve(['test', 'test1', 'test2']);
+            }, 1000);
+        });
+    }
+
+    const renderResults = (data) => {
+        let container = document.getElementById('autoCompleteResultsContainer');
+        container.innerHTML = '';
+        container.classList.remove('hidden');
+        data.forEach(item => {
+            let div = document.createElement('div');
+            div.classList.add('auto-complete-container')
+            let p = document.createElement('p');
+            p.textContent = item;
+            div.appendChild(p);
+
+            div.addEventListener('click', () => {
+                document.getElementById('searchInput').value = item;
+                container.classList.add('hidden');
+            });
+
+            container.appendChild(div);
+        });
+    }
+
+    const search = async (text) => {
+        const response = await mockFetch(text);
+        renderResults(response);
+    }
+
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+        let text = e.target.value;
+        search(text);
+    });
+
+</script>

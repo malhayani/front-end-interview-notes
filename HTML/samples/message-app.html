@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head></head>
+<div>
+    <input type="text" id="messageInput">
+    <button onclick="sendMessage()">Send</button>
+    <div id="chatContainer"></div>
+</div>
+
+</html>
+
+<script>
+    const receiveMessage = (e) => {
+        let message = e.data.msg;
+        const container = document.querySelector('#chatContainer');
+        const textContainer = document.createElement('p');
+        textContainer.textContent = message;
+        container.appendChild(textContainer);
+    }
+
+    const chatChannel = new BroadcastChannel('chat');
+    chatChannel.onmessage = receiveMessage;
+
+    const sendMessage = () => {
+        const input = document.querySelector('#messageInput');
+        chatChannel.postMessage({ msg: input.value, id: 1 })
+    }
+</script>
